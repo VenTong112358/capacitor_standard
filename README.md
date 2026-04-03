@@ -42,8 +42,12 @@ This repo is wired to project [`fsyodqwwbtwfkpaxdsst`](https://supabase.com/dash
 
 2. In the Supabase dashboard, configure **Authentication → URL Configuration → Redirect URLs**:
 
-   - `http://localhost:3000`
-   - `com.capacitor.standard://oauth-callback`
+   - `com.capacitor.standard://oauth-callback` (**required**, this scaffold uses this by default)
+   - `com.capacitor.standard://auth/callback` (**optional compatibility alias** for teams migrating from older callback path)
+
+   Android Google sign-in in this scaffold works with the default callback
+   `com.capacitor.standard://oauth-callback`. The `...://auth/callback` entry is optional and only needed
+   if you intentionally migrate to that callback path.
 
 3. Enable **Google** and **Apple** under Authentication → Providers.
 
@@ -55,18 +59,16 @@ This repo is wired to project [`fsyodqwwbtwfkpaxdsst`](https://supabase.com/dash
 
    `https://fsyodqwwbtwfkpaxdsst.supabase.co/auth/v1/callback`
 
-3. Add **Authorized JavaScript origins** at least: `http://localhost:3000` (Vite dev).
+3. In Supabase **Authentication → URL Configuration** (see Setup step 2), keep **Redirect URLs** including `com.capacitor.standard://oauth-callback` (Google Cloud only needs the `…/auth/v1/callback` URI above).
 
-4. In Supabase **Authentication → URL Configuration** (see Setup step 2), keep **Redirect URLs** including `http://localhost:3000` and `com.capacitor.standard://oauth-callback` (Google Cloud only needs the `…/auth/v1/callback` URI above).
-
-5. Install and run the web app:
+4. Install and run the web app:
 
    ```bash
    npm install
    npm run dev
    ```
 
-6. Build and sync native projects:
+5. Build and sync native projects:
 
    ```bash
    npm run build:mobile
@@ -74,7 +76,7 @@ This repo is wired to project [`fsyodqwwbtwfkpaxdsst`](https://supabase.com/dash
 
    Or `npm run build` then `npx cap sync`.
 
-7. Open native IDEs:
+6. Open native IDEs:
 
    ```bash
    npm run cap:open:ios
@@ -87,19 +89,27 @@ If Google login on iOS jumps to `http://localhost` instead of returning to the a
 
 Check these items in order:
 
-1. Supabase **Authentication → URL Configuration → Redirect URLs** must include exactly:
+1. Supabase **Authentication → URL Configuration → Redirect URLs** should include:
 
-   - `com.capacitor.standard://oauth-callback`
+   - `com.capacitor.standard://oauth-callback` (required)
+   - `com.capacitor.standard://auth/callback` (optional compatibility alias)
 
 2. iOS URL scheme in `ios/App/App/Info.plist` must include:
 
    - `com.capacitor.standard`
 
-3. Native callback constants must match:
+3. Native callback constants must match the redirect path you actually use:
 
    - `src/shared/config/appConfig.ts` → `appId: 'com.capacitor.standard'`
    - `src/shared/config/appConfig.ts` → `NATIVE_OAUTH_REDIRECT = com.capacitor.standard://oauth-callback`
    - `ios/App/ViewController.swift` → `callbackURLScheme: "com.capacitor.standard"`
+   - `android/app/src/main/AndroidManifest.xml` host must match (currently `oauth-callback`)
+
+   If you switch the active redirect path to `com.capacitor.standard://auth/callback`, also update:
+
+   - `src/shared/config/appConfig.ts` → `oauthCallbackHost: 'auth/callback'`
+   - `android/app/src/main/AndroidManifest.xml` host to `auth`
+   - Android deep-link parsing logic if you add stricter URL prefix checks
 
 4. Rebuild and re-sync native assets after any redirect/scheme change:
 
