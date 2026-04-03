@@ -8,9 +8,13 @@ Blank Vite + React + Capacitor 7 + Supabase Auth scaffold (web, iOS, Android) wi
 - For **Android**: Android Studio, JDK 17+
 - For **iOS**: Xcode, CocoaPods (optional if you use SPM-only projects like this template)
 
+## Supabase project
+
+This repo is wired to project [`fsyodqwwbtwfkpaxdsst`](https://supabase.com/dashboard/project/fsyodqwwbtwfkpaxdsst). Local config lives in `.env.local` (gitignored): set **`VITE_SUPABASE_ANON_KEY`** from [Project Settings → API](https://supabase.com/dashboard/project/fsyodqwwbtwfkpaxdsst/settings/api) (anon **public** key).
+
 ## Setup
 
-1. Copy `.env.example` to `.env.local` and set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+1. Copy `.env.example` to `.env.local` if needed, then set **`VITE_SUPABASE_ANON_KEY`** (URL is already `https://fsyodqwwbtwfkpaxdsst.supabase.co`).
 
 2. In the Supabase dashboard, configure **Authentication → URL Configuration → Redirect URLs**:
 
@@ -19,14 +23,26 @@ Blank Vite + React + Capacitor 7 + Supabase Auth scaffold (web, iOS, Android) wi
 
 3. Enable **Google** and **Apple** under Authentication → Providers.
 
-4. Install and run the web app:
+### Debug Google Sign-In
+
+1. [Authentication → Providers → Google](https://supabase.com/dashboard/project/fsyodqwwbtwfkpaxdsst/auth/providers): turn on Google and add **Client ID** / **Client Secret** from [Google Cloud Console](https://console.cloud.google.com/apis/credentials) (OAuth 2.0 Client ID, type **Web application**).
+
+2. In Google Cloud Console, under that OAuth client, set **Authorized redirect URIs** to exactly:
+
+   `https://fsyodqwwbtwfkpaxdsst.supabase.co/auth/v1/callback`
+
+3. Add **Authorized JavaScript origins** at least: `http://localhost:3000` (Vite dev).
+
+4. In Supabase **Authentication → URL Configuration** (see Setup step 2), keep **Redirect URLs** including `http://localhost:3000` and `com.capacitor.standard://oauth-callback` (Google Cloud only needs the `…/auth/v1/callback` URI above).
+
+5. Install and run the web app:
 
    ```bash
    npm install
    npm run dev
    ```
 
-5. Build and sync native projects:
+6. Build and sync native projects:
 
    ```bash
    npm run build:mobile
@@ -34,7 +50,7 @@ Blank Vite + React + Capacitor 7 + Supabase Auth scaffold (web, iOS, Android) wi
 
    Or `npm run build` then `npx cap sync`.
 
-6. Open native IDEs:
+7. Open native IDEs:
 
    ```bash
    npm run cap:open:ios
