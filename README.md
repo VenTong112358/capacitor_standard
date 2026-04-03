@@ -81,6 +81,35 @@ This repo is wired to project [`fsyodqwwbtwfkpaxdsst`](https://supabase.com/dash
    npm run cap:open:android
    ```
 
+### iOS Google login unexpectedly returns to `localhost`
+
+If Google login on iOS jumps to `http://localhost` instead of returning to the app, Supabase is usually falling back to its **Site URL** because the native deep-link redirect is not accepted.
+
+Check these items in order:
+
+1. Supabase **Authentication → URL Configuration → Redirect URLs** must include exactly:
+
+   - `com.capacitor.standard://oauth-callback`
+
+2. iOS URL scheme in `ios/App/App/Info.plist` must include:
+
+   - `com.capacitor.standard`
+
+3. Native callback constants must match:
+
+   - `src/shared/config/appConfig.ts` → `appId: 'com.capacitor.standard'`
+   - `src/shared/config/appConfig.ts` → `NATIVE_OAUTH_REDIRECT = com.capacitor.standard://oauth-callback`
+   - `ios/App/ViewController.swift` → `callbackURLScheme: "com.capacitor.standard"`
+
+4. Rebuild and re-sync native assets after any redirect/scheme change:
+
+   ```bash
+   npm run build
+   npx cap sync ios
+   ```
+
+5. Delete and reinstall the iOS app on device/simulator to avoid stale scheme/cache behavior.
+
 ## Renaming the app id
 
 When you change `appId` in `capacitor.config.ts`, also update:
