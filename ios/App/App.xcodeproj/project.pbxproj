@@ -15,8 +15,8 @@
 		504EC30F1FED79650016851F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30E1FED79650016851F /* Assets.xcassets */; };
 		504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
-		9101161A2F6BDBEC00CD4978 /* ViewController 3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910116192F6BDBEC00CD4978 /* ViewController 3.swift */; };
-		9101161E2F6BDFCF00CD4978 /* ASWebAuthPlugin 2.m in Sources */ = {isa = PBXBuildFile; fileRef = 9101161D2F6BDFCF00CD4978 /* ASWebAuthPlugin 2.m */; };
+		9101161A2F6BDBEC00CD4978 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910116192F6BDBEC00CD4978 /* ViewController.swift */; };
+		9101161E2F6BDFCF00CD4978 /* ASWebAuthPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9101161D2F6BDFCF00CD4978 /* ASWebAuthPlugin.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,8 +30,8 @@
 		504EC3131FED79650016851F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
 		910116102F6BD7DF00CD4978 /* App-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "App-Bridging-Header.h"; sourceTree = "<group>"; };
-		910116192F6BDBEC00CD4978 /* ViewController 3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController 3.swift"; sourceTree = "<group>"; };
-		9101161D2F6BDFCF00CD4978 /* ASWebAuthPlugin 2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ASWebAuthPlugin 2.m"; sourceTree = "<group>"; };
+		910116192F6BDBEC00CD4978 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		9101161D2F6BDFCF00CD4978 /* ASWebAuthPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASWebAuthPlugin.m; sourceTree = "<group>"; };
 		9163FBF52F697615000B480B /* AppRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AppRelease.entitlements; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -51,8 +51,8 @@
 		504EC2FB1FED79650016851F = {
 			isa = PBXGroup;
 			children = (
-				9101161D2F6BDFCF00CD4978 /* ASWebAuthPlugin 2.m */,
-				910116192F6BDBEC00CD4978 /* ViewController 3.swift */,
+				9101161D2F6BDFCF00CD4978 /* ASWebAuthPlugin.m */,
+				910116192F6BDBEC00CD4978 /* ViewController.swift */,
 				958DCC722DB07C7200EA8C5F /* debug.xcconfig */,
 				504EC3061FED79650016851F /* App */,
 				504EC3051FED79650016851F /* Products */,
@@ -166,8 +166,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
-				9101161A2F6BDBEC00CD4978 /* ViewController 3.swift in Sources */,
-				9101161E2F6BDFCF00CD4978 /* ASWebAuthPlugin 2.m in Sources */,
+				9101161A2F6BDBEC00CD4978 /* ViewController.swift in Sources */,
+				9101161E2F6BDFCF00CD4978 /* ASWebAuthPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

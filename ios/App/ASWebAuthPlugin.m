@@ -1,8 +1,8 @@
 #import <Foundation/Foundation.h>
 @import Capacitor;
 
-@class ASWebAuth;
+@class ASWebAuthPlugin;
 
-CAP_PLUGIN(ASWebAuth, "ASWebAuth",
+CAP_PLUGIN(ASWebAuthPlugin, "ASWebAuth",
     CAP_PLUGIN_METHOD(start, CAPPluginReturnPromise);
 )

@@ -1,6 +1,30 @@
 # Capacitor Standard
 
-Blank Vite + React + Capacitor 7 + Supabase Auth scaffold (web, iOS, Android) with email/password, Google OAuth, and Apple OAuth (iOS). UI pattern mirrors [DemoLingoMock](../DemoLingoMock/).
+Blank Vite + React + Capacitor 7 + Supabase Auth scaffold (web, iOS, Android) with email/password, Google OAuth, and Apple OAuth (iOS). This template keeps UI minimal while separating app orchestration, auth feature logic, and shared platform adapters.
+
+## Project structure
+
+```text
+src/
+  app/                              # App entry and high-level state composition
+  features/
+    auth/
+      constants/                    # password rules and auth constants
+      hooks/                        # auth session lifecycle hook
+      services/                     # email auth + OAuth flows + callback parser
+      views/                        # Auth and recovery screens
+    home/views/                     # signed-in placeholder screen
+  shared/
+    config/                         # app id/name and redirect constants
+    lib/                            # Supabase client
+    platform/                       # Capacitor bridge adapters
+```
+
+Auth business logic is intentionally kept out of React view components:
+
+- `views/*` only renders UI and forwards user events.
+- `hooks/useAuthViewModel.ts` and `hooks/useRecoveryPasswordViewModel.ts` own all state transitions.
+- `services/*` contains pure validation + Supabase/OAuth integrations.
 
 ## Prerequisites
 
@@ -61,15 +85,21 @@ This repo is wired to project [`fsyodqwwbtwfkpaxdsst`](https://supabase.com/dash
 
 When you change `appId` in `capacitor.config.ts`, also update:
 
-- `src/utils/platform.ts` (`NATIVE_OAUTH_REDIRECT`)
+- `src/shared/config/appConfig.ts` (`appId` / `NATIVE_OAUTH_REDIRECT`)
 - iOS `CFBundleURLSchemes` in `ios/App/App/Info.plist`
-- `callbackURLScheme` in `ios/App/ViewController 3.swift`
+- `callbackURLScheme` in `ios/App/ViewController.swift`
 - Android `AndroidManifest.xml` intent-filter `android:scheme` / `host`
 - Supabase redirect allowlist
 
 ## iOS native OAuth
 
-`ASWebAuthenticationSession` is implemented in `ios/App/ViewController 3.swift` and registered via `ios/App/ASWebAuthPlugin 2.m`. The JavaScript bridge is `src/utils/asWebAuth.ts`.
+`ASWebAuthenticationSession` is implemented in `ios/App/ViewController.swift` and registered via `ios/App/ASWebAuthPlugin.m`. The JavaScript bridge is `src/shared/platform/asWebAuth.ts`.
+
+Google / Apple callback parsing supports both implicit tokens (`access_token`) and authorization code flow (`code`) in `src/features/auth/services/oauthCallback.ts`, which fixes iOS callback compatibility issues across different Supabase OAuth response modes.
+
+## App icon
+
+This scaffold keeps the default Capacitor app icons on iOS and Android (no custom icon assets).
 
 ## Notes
 

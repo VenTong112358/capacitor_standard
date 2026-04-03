@@ -1,7 +1,7 @@
 import { Capacitor } from '@capacitor/core';
+import { NATIVE_OAUTH_REDIRECT } from '../config/appConfig';
 
-/** Must match capacitor.config.ts appId and Supabase redirect allowlist. */
-export const NATIVE_OAUTH_REDIRECT = 'com.capacitor.standard://oauth-callback';
+export { NATIVE_OAUTH_REDIRECT };
 
 export function getOAuthRedirectUrl(): string {
   if (Capacitor.isNativePlatform()) {

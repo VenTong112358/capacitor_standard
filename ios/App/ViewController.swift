@@ -8,7 +8,7 @@ class ViewController: CAPBridgeViewController {
     }
 }
 
-@objc(ASWebAuth)
+@objc(ASWebAuthPlugin)
 class ASWebAuthPlugin: CAPPlugin, ASWebAuthenticationPresentationContextProviding {
 
     private var authSession: ASWebAuthenticationSession?
