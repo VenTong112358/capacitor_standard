@@ -1,0 +1,26 @@
+node_modules/
+dist/
+
+# Supabase / Vite secrets — do not commit keys (use .env.example as template only)
+.env
+.env.*
+!.env.example
+.envrc
+# Supabase CLI local overrides (if used)
+supabase/.env
+.supabase/
+
+# Capacitor synced web assets (regenerate with npm run build && npx cap sync)
+ios/App/App/public/
+android/app/src/main/assets/public/
+
+# Xcode / Android
+ios/App/App.xcodeproj/xcuserdata/
+ios/App/App.xcworkspace/xcuserdata/
+*.xcuserstate
+android/.gradle/
+android/app/build/
+android/build/
+android/capacitor-cordova-android-plugins/build/
+android/local.properties
+.DS_Store
