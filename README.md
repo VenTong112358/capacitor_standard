@@ -1,6 +1,6 @@
 # Capacitor Standard
 
-Blank Vite + React + Capacitor 7 + Supabase Auth scaffold (web, iOS, Android) with email/password, Google OAuth, and Apple OAuth (iOS). This template keeps UI minimal while separating app orchestration, auth feature logic, and shared platform adapters.
+Blank Vite + React + Capacitor 7 + Supabase Auth scaffold (web, iOS, Android) with email/password, Google OAuth, Apple OAuth (iOS), and an optional RevenueCat billing layer. This template keeps UI minimal while separating app orchestration, feature logic, and shared platform adapters.
 
 ## Project structure
 
@@ -13,10 +13,15 @@ src/
       hooks/                        # auth session lifecycle hook
       services/                     # email auth + OAuth flows + callback parser
       views/                        # Auth and recovery screens
+    billing/
+      hooks/                        # paywall orchestration and action handlers
+      services/                     # scaffold-specific membership integration
+      types/                        # generic membership contract for the scaffold
+      views/                        # minimal paywall UI
     home/views/                     # signed-in placeholder screen
   shared/
     config/                         # app id/name and redirect constants
-    lib/                            # Supabase client
+    lib/                            # Supabase client + reusable RevenueCat core
     platform/                       # Capacitor bridge adapters
 ```
 
@@ -25,6 +30,12 @@ Auth business logic is intentionally kept out of React view components:
 - `views/*` only renders UI and forwards user events.
 - `hooks/useAuthViewModel.ts` and `hooks/useRecoveryPasswordViewModel.ts` own all state transitions.
 - `services/*` contains pure validation + Supabase/OAuth integrations.
+
+The billing layer follows the same split:
+
+- `src/shared/lib/revenuecat-subscription/*` is a UI-free, app-agnostic RevenueCat core copied and generalized from `DemoLingoMock`.
+- `src/features/billing/services/billingService.ts` is the scaffold adapter that binds RevenueCat to Supabase auth and optional backend membership functions.
+- `src/features/billing/views/BillingView.tsx` is only an example paywall consumer.
 
 ## Prerequisites
 
@@ -50,6 +61,70 @@ This repo is wired to project [`fsyodqwwbtwfkpaxdsst`](https://supabase.com/dash
    if you intentionally migrate to that callback path.
 
 3. Enable **Google** and **Apple** under Authentication → Providers.
+
+## Optional RevenueCat billing
+
+The scaffold now includes a generic RevenueCat-first subscription module extracted from `DemoLingoMock`.
+
+### Environment variables
+
+Set these in `.env.local` if you want native billing:
+
+```bash
+VITE_REVENUECAT_API_KEY=
+VITE_REVENUECAT_IOS_API_KEY=
+VITE_REVENUECAT_ANDROID_API_KEY=
+VITE_REVENUECAT_ENTITLEMENT_KEY=pro
+```
+
+You can use a single shared key (`VITE_REVENUECAT_API_KEY`) or override per platform.
+
+### Optional backend membership sync
+
+If your app needs server-owned membership state after purchase or restore, also set:
+
+```bash
+VITE_BILLING_STATUS_FUNCTION=billing-status
+VITE_BILLING_SYNC_FUNCTION=billing-sync-revenuecat
+```
+
+The scaffold will call those Supabase Edge Functions through `supabase.functions.invoke(...)`.
+If you leave them unset, it falls back to pure RevenueCat entitlement checks on native builds.
+
+Expected function contract:
+
+- `billing-status` returns `{ membership: { tier, status, productId, entitlementKey, store, expiresAt, willRenew, environment } }`
+- `billing-sync-revenuecat` returns the same payload after syncing provider state
+
+### Installed module boundaries
+
+Core reusable files:
+
+- `src/shared/lib/revenuecat-subscription/client.ts`
+- `src/shared/lib/revenuecat-subscription/formatters.ts`
+- `src/shared/lib/revenuecat-subscription/useRevenueCatSubscription.ts`
+
+Scaffold adapter files:
+
+- `src/features/billing/services/billingConfig.ts`
+- `src/features/billing/services/billingService.ts`
+- `src/features/billing/hooks/useBillingViewModel.ts`
+- `src/features/billing/views/BillingView.tsx`
+
+### Native sync
+
+After changing billing dependencies or env, rebuild and sync native projects:
+
+```bash
+npm install
+npm run build:mobile
+```
+
+If you only need to refresh native bindings after editing code:
+
+```bash
+npx cap sync
+```
 
 ### Debug Google Sign-In
 
