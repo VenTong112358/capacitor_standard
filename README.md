@@ -77,19 +77,42 @@ VITE_REVENUECAT_ANDROID_API_KEY=
 VITE_REVENUECAT_ENTITLEMENT_KEY=pro
 ```
 
-You can use a single shared key (`VITE_REVENUECAT_API_KEY`) or override per platform.
+This scaffold now follows the same frontend env naming as `DemoLingoMock`: use one shared
+`VITE_REVENUECAT_API_KEY` by default, or override it with `VITE_REVENUECAT_IOS_API_KEY` /
+`VITE_REVENUECAT_ANDROID_API_KEY` later if you add real store keys.
+
+### Test Store setup in this scaffold
+
+The repo is now wired to a dedicated RevenueCat project named `capacitor-standard` using Test
+Store only. Put the RevenueCat Test Store SDK key into `VITE_REVENUECAT_API_KEY` in your local
+`.env.local`.
+
+- Project: `capacitor-standard`
+- Test Store API key: stored in local `.env.local`
+- Entitlement identifier: `pro`
+- Default offering identifier: `default`
+- Test Store product identifiers: `monthly`, `yearly`, `lifetime`
+
+This means native iOS / Android runs can exercise the purchase flow immediately without creating
+an App Store Connect or Play Console configuration first.
 
 ### Optional backend membership sync
 
-If your app needs server-owned membership state after purchase or restore, also set:
+If your app needs server-owned membership state after purchase or restore, this scaffold now
+matches `DemoLingoMock` and calls these fixed Supabase Edge Functions:
+
+- `billing-status`
+- `billing-sync-revenuecat`
+
+Configure the backend function secrets in Supabase with:
 
 ```bash
-VITE_BILLING_STATUS_FUNCTION=billing-status
-VITE_BILLING_SYNC_FUNCTION=billing-sync-revenuecat
+REVENUECAT_PROJECT_ID=45c619b6
+REVENUECAT_SECRET_KEY=...
+REVENUECAT_ENTITLEMENT_KEY=pro
 ```
 
-The scaffold will call those Supabase Edge Functions through `supabase.functions.invoke(...)`.
-If you leave them unset, it falls back to pure RevenueCat entitlement checks on native builds.
+The frontend no longer needs extra env vars for the function names.
 
 Expected function contract:
 

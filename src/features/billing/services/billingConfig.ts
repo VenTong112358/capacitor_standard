@@ -14,8 +14,6 @@ export function getRevenueCatApiKey(): string | null {
 export const REVENUECAT_ENTITLEMENT_KEY =
   import.meta.env.VITE_REVENUECAT_ENTITLEMENT_KEY?.trim() || 'pro';
 
-export const BILLING_STATUS_FUNCTION =
-  import.meta.env.VITE_BILLING_STATUS_FUNCTION?.trim() || null;
+export const BILLING_STATUS_FUNCTION = 'billing-status';
 
-export const BILLING_SYNC_FUNCTION =
-  import.meta.env.VITE_BILLING_SYNC_FUNCTION?.trim() || null;
+export const BILLING_SYNC_FUNCTION = 'billing-sync-revenuecat';
