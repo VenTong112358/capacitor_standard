@@ -17,11 +17,12 @@ Deno.serve(async (req) => {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unexpected error';
-    const status = message === 'Unauthorized' || message === 'Missing Authorization header'
-      ? 401
-      : message === 'RevenueCat is not configured'
-        ? 503
-        : 500;
+    const status =
+      message === 'Unauthorized' || message === 'Missing Authorization header'
+        ? 401
+        : message === 'RevenueCat is not configured'
+          ? 503
+          : 500;
 
     return new Response(JSON.stringify({ error: message }), {
       status,
