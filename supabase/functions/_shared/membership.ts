@@ -146,8 +146,13 @@ async function fetchRevenueCatSubscriptions(
 
   if (response.status === 404) return [];
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`RevenueCat subscriptions fetch failed: ${response.status} ${errorText}`);
+    const errorText = await response.text().catch(() => '');
+    console.error(
+      `[billing] RevenueCat v2 subscriptions fetch failed: status=${response.status} body=${errorText}`,
+    );
+    throw new Error(
+      `RevenueCat subscriptions fetch failed: ${response.status} ${errorText || response.statusText}`,
+    );
   }
 
   const payload = (await response.json()) as RevenueCatListResponse<RevenueCatSubscription>;

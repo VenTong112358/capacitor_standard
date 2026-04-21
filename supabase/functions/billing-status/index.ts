@@ -17,6 +17,7 @@ Deno.serve(async (req) => {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unexpected error';
+    console.error('[billing-status] error:', error);
     const status =
       message === 'Unauthorized' || message === 'Missing Authorization header' ? 401 : 500;
 

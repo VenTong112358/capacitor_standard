@@ -132,10 +132,35 @@ async function ensurePurchasesConfigured(): Promise<boolean> {
   return true;
 }
 
+async function extractFunctionErrorMessage(error: unknown, fallback: string): Promise<string> {
+  if (!error) return fallback;
+  const context = (error as { context?: unknown }).context;
+  if (context instanceof Response) {
+    try {
+      const text = await context.clone().text();
+      if (text) {
+        try {
+          const parsed = JSON.parse(text);
+          if (isRecord(parsed) && typeof parsed.error === 'string') return parsed.error;
+          if (isRecord(parsed) && typeof parsed.message === 'string') return parsed.message;
+        } catch {
+          // text is not JSON
+        }
+        return text;
+      }
+    } catch {
+      // ignore
+    }
+  }
+  if (error instanceof Error && error.message) return error.message;
+  return fallback;
+}
+
 async function invokeMembershipFunction(functionName: string): Promise<BillingMembership> {
   const { data, error } = await supabase.functions.invoke(functionName);
   if (error) {
-    throw new Error(error.message || `Failed to invoke ${functionName}`);
+    const message = await extractFunctionErrorMessage(error, `Failed to invoke ${functionName}`);
+    throw new Error(`${functionName}: ${message}`);
   }
 
   const payload = isRecord(data) ? data.membership : null;
@@ -191,7 +216,18 @@ export async function syncBillingMembershipFromRevenueCat(): Promise<BillingMemb
   }
 
   if (BILLING_SYNC_FUNCTION) {
-    return invokeMembershipFunction(BILLING_SYNC_FUNCTION);
+    try {
+      return await invokeMembershipFunction(BILLING_SYNC_FUNCTION);
+    } catch (error) {
+      console.warn(
+        'Backend billing sync failed, falling back to RevenueCat customer info:',
+        error instanceof Error ? error.message : error,
+      );
+      if (canUseNativeSubscriptions()) {
+        return fetchRevenueCatMembership();
+      }
+      throw error;
+    }
   }
 
   if (canUseNativeSubscriptions()) {
